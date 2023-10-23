@@ -1,0 +1,6 @@
+package io.car;
+
+public enum Model {
+    CIVIC, ACCORD, CRV, TACOMA, CAMRY, TUNDRA, OUTBACK, CROSSTREK, WRX,
+    FRONTIER, GTR, MAXIMA, MIATA, BSERIES, CRASHED
+}
