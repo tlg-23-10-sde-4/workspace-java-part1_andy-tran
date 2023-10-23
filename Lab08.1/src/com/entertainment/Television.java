@@ -33,6 +33,9 @@ public class Television {
     private int volume;
     private DisplayType display = DisplayType.LED;
 
+    // Televisions HAS A tuner
+    private Tuner tuner = new Tuner();  // instantiated internally, not exposed (no get/set)
+
     // CONSTRUCTORS - special methods that get called when the client says "new"
     public Television() {
         instanceCount++;
@@ -54,6 +57,15 @@ public class Television {
     }
 
     // BUSINESS METHODS (functions) - what operations can com.entertainment.Television objects do?
+
+    public void changeChannel(String channel) {
+        tuner.setChannel(channel); // delegate to tuner object (component part)
+    }
+
+    public String getCurrentChannel() {
+        return tuner.getChannel(); // delegate to tuner object.
+    }
+
     public void turnOn() {
         boolean isConnected = verifyInternetConnection();
         System.out.println("Turning on your " + brand + " television to volume " + volume);
@@ -121,6 +133,7 @@ public class Television {
         return "com.entertainment.Television" +
                 ": brand=" + getBrand() +
                 ", volume=" + getVolume() +
-                ", display=" + getDisplay();
+                ", display=" + getDisplay() +
+                ", channel=" + getCurrentChannel();
     }
 }
