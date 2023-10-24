@@ -28,9 +28,11 @@ public class Employee {
 
     // constructors
     public Employee() {
+        super();
     }
 
     public Employee(String name, LocalDate hireDate) {
+        // calls super whether you type it or not.
         setName(name);
         setHireDate(hireDate);
     }

@@ -31,6 +31,7 @@ public class Department {
 
     // constructors
     public Department() {
+        // calls super whether you type it or not
     }
 
     public Department(String name, String location) {
