@@ -8,6 +8,12 @@
 
 package com.javatunes.catalog.test;
 
+import com.javatunes.catalog.InMemoryCatalog;
+import com.javatunes.catalog.MusicCategory;
+import com.javatunes.catalog.MusicItem;
+
+import java.util.Collection;
+
 class InMemoryCatalogTest {
 
     /*
@@ -23,20 +29,67 @@ class InMemoryCatalogTest {
         // testFindByCategory();
         // testSize();
         // testGetAll();
+        // testFindSelfEntitled();
+        // testFindCheapRock();
+        // testNumInGenre();
+        // testGetAvgPrice();
+        // testFindCheapest();
+    }
+
+    private static void testFindCheapest() {
+    }
+
+    private static void testGetAvgPrice() {
+    }
+
+    private static void testNumInGenre() {
+        InMemoryCatalog catalog = new InMemoryCatalog();
+        int nums = catalog.numInGenre(MusicCategory.ROCK);
+        System.out.println(nums);
+    }
+
+    private static void testFindCheapRock() {
+        InMemoryCatalog catalog = new InMemoryCatalog();
+        Collection<MusicItem> cheap = catalog.findCheapRock(20.0);
+        dump(cheap);
+    }
+
+    private static void testFindSelfEntitled() {
+        InMemoryCatalog catalog = new InMemoryCatalog();
+        Collection<MusicItem> entitled = catalog.findSelfTitled();
+        dump(entitled);
     }
 
     private static void testFindById() {
+        InMemoryCatalog catalog = new InMemoryCatalog();
+        MusicItem found = catalog.findById(9L);
+        System.out.println(found);
+
+        MusicItem nFound = catalog.findById(25L);
+        System.out.println(nFound);
     }
 
     private static void testFindByKeyword() {
     }
 
     private static void testFindByCategory() {
+        InMemoryCatalog catalog = new InMemoryCatalog();
+        Collection<MusicItem> pop = catalog.findByCategory(MusicCategory.POP);
+        dump(pop);
     }
 
     private static void testSize() {
+        InMemoryCatalog catalog = new InMemoryCatalog();
+        System.out.println(catalog.size());
     }
 
     private static void testGetAll() {
+    }
+
+    // helper method to show collection vertically
+    private static void dump(Collection<MusicItem> items) {
+        for (MusicItem item : items) {
+            System.out.println(item);
+        }
     }
 }

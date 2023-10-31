@@ -60,32 +60,100 @@ public class InMemoryCatalog implements Catalog {
      *    right-click -> Refactor -> Extract Method.
      *    It's not just about removing redundancies - it will make the more complicated methods easier to write!
      */
+    @Override
+    public MusicItem findById(Long id) {
+        MusicItem  item = null;
+        for (MusicItem currentItem : catalogData) {
+            if(currentItem.getId().equals(id)) {
+                item = currentItem;
+                break;
+            }
+        }
+        return item;
+    }
+
+    @Override
+    public Collection<MusicItem> findByKeyword(String keyword) {
+        return null;
+    }
+
+    @Override
+    public Collection<MusicItem> findByCategory(MusicCategory category) {
+        Collection<MusicItem> res = new ArrayList<>();
+        for (MusicItem item : catalogData) {
+            if(item.getMusicCategory().equals(category)) {
+                res.add(item);
+            }
+        }
+        return res;
+    }
+
+    @Override
+    public int size() {
+        return catalogData.size();
+    }
+
+    @Override
+    public Collection<MusicItem> getAll() {
+        return null;
+    }
 
     /**
      * TASK: find all MusicItems where title is same as artist.
      * For example, Madonna's first album is simply titled, "Madonna."
      */
+    public Collection<MusicItem> findSelfTitled () {
+        Collection<MusicItem> res = new ArrayList<>();
 
+        for (MusicItem item : catalogData) {
+            if(item.getTitle().equals(item.getArtist())) {
+                res.add(item);
+            }
+        }
+        return res;
+    }
 
     /**
      * TASK: find all "rock" items whose price is less than or equal to the specified price.
      */
+    public Collection<MusicItem> findCheapRock(double price) {
+        Collection <MusicItem> res = new ArrayList<>();
 
+        for (MusicItem item : catalogData) {
+            if (item.getMusicCategory().equals(MusicCategory.ROCK) && item.getPrice() <= price) {
+                res.add(item);
+            }
+        }
+        return res;
+    }
 
     /**
      * TASK: how many items of the specified genre (MusicCategory) do we sell?
      */
+    public int numInGenre(MusicCategory category) {
+        int count = 0;
 
+        for (MusicItem item : catalogData) {
+            if (item.getMusicCategory().equals(category)) {
+                count++;
+            }
+        }
+        return count;
+    }
 
     /**
      * TASK: determine average price of our low-cost, extensive catalog of music.
      */
-
+    public double getAvgPrice() {
+        return 0.0;
+    }
 
     /**
      * TASK: find the cheapest item with the specified genre (MusicCategory).
      */
-
+    public MusicItem findCheapest() {
+        return null;
+    }
 
     /**
      * TASK: find the average price of items in the specified genre (MusicCategory).
