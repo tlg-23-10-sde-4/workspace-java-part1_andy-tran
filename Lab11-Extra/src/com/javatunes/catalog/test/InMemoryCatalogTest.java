@@ -28,7 +28,7 @@ class InMemoryCatalogTest {
         // testFindByKeyword();
         // testFindByCategory();
         // testSize();
-        // testGetAll();
+         testGetAll();
         // testFindSelfEntitled();
         // testFindCheapRock();
         // testNumInGenre();
@@ -84,6 +84,9 @@ class InMemoryCatalogTest {
     }
 
     private static void testGetAll() {
+        InMemoryCatalog catalog = new InMemoryCatalog();
+        Collection<MusicItem> allItems = catalog.getAll();
+        allItems.clear(); // should throw exception
     }
 
     // helper method to show collection vertically
