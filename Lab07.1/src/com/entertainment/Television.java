@@ -1,121 +1,157 @@
+/*
+ * This code is sample code, provided as-is, and we make no
+ * warranties as to its correctness or suitability for
+ * any purpose.
+ *
+ * We hope that it's useful to you.  Enjoy.
+ * Copyright LearningPatterns Inc.
+ */
 package com.entertainment;
-// business class to model a tv
 
-import java.util.Arrays;
+import java.util.Objects;
 
-public class Television {
-    // properties/ attributes/ fields
-    public static final int MIN_VOLUME = 0;
-    public static final int MAX_VOLUME = 100;
-    public static final String [] VALID_BRANDS = {"Toshiba", "Samsung", "Sony", "TCL"};
-
-    private static int instanceCount = 0;
-
-    private int volume = 1;
-    private String brand;
-    private DisplayType display = DisplayType.LED;
-
-    // for muting behavior
-    private int temp;
-    private boolean isMute;
-
-    //constructors
-    public Television() {
-        instanceCount++;
-    }
-
-    public Television(String brand) {
-        setBrand(brand);
-    }
-
-    public Television(int volume, String brand) {
-        this(brand);
-        setVolume(volume);
-    }
-
-    public Television(String brand, int volume, DisplayType display) {
-        this(volume, brand);
-        setDisplay(display);
-    }
-
-    // methods/ functions
-    public void mute() {
-        isMute = !isMute;
-        if (isMute == true) {
-            temp = getVolume();
-            setVolume(MIN_VOLUME);
-        } else {
-            setVolume(temp);
+public class Television
+implements Comparable<Television> {
+  public static final int MIN_VOLUME = 0;
+  public static final int MAX_VOLUME = 100;
+  public static final int MIN_CHANNEL = 1;
+  public static final int MAX_CHANNEL = 999;
+  
+  private String brand;
+  private int volume;
+  private DisplayType display;
+  private Tuner tuner = new Tuner();  // set up internally and used for channel management
+  
+  public Television() {
+  }
+  
+  public Television(String brand) {
+    setBrand(brand);
+  }
+  
+  public Television(String brand, int volume)
+  throws IllegalArgumentException {
+    this(brand);
+    setVolume(volume);
+  }
+  
+  public Television(String brand, DisplayType display) {
+    this(brand);
+    setDisplay(display);
+  }
+  
+  public Television(String brand, int volume, DisplayType display)
+  throws IllegalArgumentException {
+    this(brand, volume);
+    setDisplay(display);
+  }
+  
+  public void connectToNetwork() {
+    System.out.print("Connecting to network ");
+    System.out.println(connect() ? "connected." : "interrupted!");
+  }
+  
+  /*
+   * Simulate slow method execution.
+   * 
+   * Don't worry about all the threading code.
+   * It's only here for display purposes: " . . . " on the console while running.
+   * The important thing is the timeout mechanism.
+   */
+  private boolean connect() {
+    boolean success = false;
+    
+    int delay = 5000;
+    int spin = 10;
+    boolean running = true;
+    while (running && !Thread.currentThread().isInterrupted()) {
+      try {
+        for (int i = 0; i < spin; i++) {
+          System.out.print(". ");
+          Thread.sleep(delay / spin);
         }
+        running = false;
+        success = true;
+      }
+      catch (InterruptedException e) {
+        running = false;
+        success = false;
+      }
     }
-
-    public DisplayType getDisplay() {
-        return display;
+    return success;
+  }
+  
+  public String getBrand() {
+    return this.brand;
+  }
+  
+  public void setBrand(String brand) {
+    this.brand = brand;
+  }
+  
+  public int getVolume() {
+    return this.volume;
+  }
+  
+  public void setVolume(int volume)
+  throws IllegalArgumentException {
+    if (volume >= MIN_VOLUME && volume <= MAX_VOLUME) {
+      this.volume = volume;
     }
-
-    public void setDisplay(DisplayType display) {
-        this.display = display;
+    else {
+      throw new IllegalArgumentException("Invalid volume: " + volume + ". " + 
+        "Allowed range: [" + MIN_VOLUME + "," + MAX_VOLUME + "].");
     }
-
-    public static int getInstanceCount() {
-        return instanceCount;
+  }
+  
+  public int getCurrentChannel() {
+    return tuner.getChannel();  // delegate to contained Tuner object
+  }
+  
+  public void changeChannel(int channel)
+  throws InvalidChannelException {
+    if (channel >= MIN_CHANNEL && channel <= MAX_CHANNEL) {
+      tuner.setChannel(channel);  // delegate to contained Tuner object
     }
-
-    private boolean verifyInternetConnection() {
-        return true;
+    else {
+      throw new InvalidChannelException("Invalid channel: " + channel + ". " +
+        "Allowed range: [" + MIN_CHANNEL + "," + MAX_CHANNEL + "].");
     }
+  }
+  
+  public DisplayType getDisplay() {
+    return this.display;
+  }
+  
+  public void setDisplay(DisplayType display) {
+    this.display = display;
+  }
 
-    public void turnOn() {
-        boolean isConnected = verifyInternetConnection();
-        System.out.println(brand + " TV turning on... volume is " + volume);
+  @Override
+  public String toString() { 
+    return getClass().getSimpleName() + " [brand=" + getBrand() + ", volume=" + getVolume() + 
+      ", currentChannel=" + getCurrentChannel() + ", display=" + getDisplay() + "]";
+  }
+  
+  @Override
+  public int compareTo(Television other) {
+    return this.getBrand().compareTo(other.getBrand());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(getBrand(), getVolume(), getDisplay());
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    boolean result = false;
+    if (obj instanceof Television) {
+      Television other = (Television) obj;
+      result = Objects.equals(this.getBrand(),   other.getBrand()) &&
+               Objects.equals(this.getVolume(),  other.getVolume()) &&
+               Objects.equals(this.getDisplay(), other.getDisplay());
     }
-
-    public void turnOff() {
-        System.out.println(brand + " TV turning off... volume is " + volume);
-    }
-
-    // getters and setters
-    public int getVolume() {
-        return volume;
-    }
-
-    public void setVolume(int volume) {
-        if (volume >= 0 && volume <= 100) {
-            this.volume = volume;
-        } else {
-            System.out.println("Volume " + volume + " not in range of 0 - 100.");
-        }
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        boolean valid = false;
-        if(isValidBrand(brand)) {
-            this.brand = brand;
-        } else {
-            System.out.println("Invalid brand: " + brand + " Must be one of " + Arrays.toString(VALID_BRANDS));
-        }
-    }
-
-    private static boolean isValidBrand(String brand) {
-        boolean valid = false;
-        for (String currentBrand : VALID_BRANDS) {
-            if(brand.equals(currentBrand)) {
-                return true;
-                //valid = true;
-                //break;
-            }
-        }
-        return false;
-    }
-
-    public String toString() {
-        return String.format("Television: brand=%s, volume=%s, display=%s",
-                getBrand(), getVolume(), getDisplay());
-
-        // return getBrand() + " volume = " + getVolume() + " display is: " + getDisplay();
-    }
+    return result;
+  }
 }
